@@ -6,7 +6,9 @@ import { createServer as createViteServer } from 'vite';
 import Database from 'better-sqlite3';
 import { GoogleGenAI } from '@google/genai';
 
-const db = new Database('showroom.db');
+// Use persistent database path for Railway
+const dbPath = process.env.DATABASE_PATH || 'showroom.db';
+const db = new Database(dbPath);
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -378,8 +380,9 @@ async function startServer() {
     });
   }
 
-  app.listen(3000, '0.0.0.0', () => {
-    console.log('Server running on http://localhost:3000');
+  const PORT = parseInt(process.env.PORT || '3000', 10);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
